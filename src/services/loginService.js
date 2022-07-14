@@ -1,7 +1,5 @@
 const Joi = require('joi');
 const jwt = require('jsonwebtoken');
-const models = require('../database/models');
-const UserNotFound = require('../errors/UserNotFound');
 const runSchema = require('./utils');
 
 const secret = process.env.JWT_SECRET;
@@ -17,19 +15,6 @@ const loginService = {
     }))(body);
 
     return result;
-  },
-
-  async getByEmail(email, password) {
-    const user = await models.User.findOne({ 
-      where: { email, password },
-      raw: true,
-    });
-
-    if (!user) throw new UserNotFound();
-
-    const { password: userPass, ...newUser } = user;
-
-    return newUser;
   },
 
   async makeToken(user) {

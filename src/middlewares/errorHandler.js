@@ -1,6 +1,7 @@
 const errors = {
   ValidationError: 400,
-  UserNotFound: 400,
+  UserNotFoundError: 400,
+  ConflictError: 409,
 };
 
 /**
