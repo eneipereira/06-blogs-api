@@ -1,6 +1,7 @@
 const Joi = require('joi');
 const models = require('../database/models');
 const ConflictError = require('../errors/ConflictError');
+const NotFoundError = require('../errors/NotFoundError');
 const UserNotFound = require('../errors/UserNotFoundError');
 const runSchema = require('./utils');
 
@@ -16,6 +17,14 @@ const userService = {
       'string.email': '{{#label}} must be a valid email',
       'string.required': 'Some required fields are missing',
     }))(body);
+
+    return result;
+  },
+
+  async validateParamsId(params) {
+    const result = runSchema(Joi.object({
+      id: Joi.number().required().positive().integer(),
+    }))(params);
 
     return result;
   },
@@ -46,6 +55,20 @@ const userService = {
     });
 
     return allUsers;
+  },
+
+  async getById(id) {
+    const user = await models.User.findOne({
+      where: { id },
+      raw: true,
+      attributes: {
+        exclude: ['password'],
+      },
+    });
+
+    if (!user) throw new NotFoundError('User does not exist');
+
+    return user;
   },
 
   async getByEmail(email, password) {

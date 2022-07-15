@@ -16,12 +16,24 @@ const userController = {
   /** @type {import('express').RequestHandler} */
   async getAll(req, res) {
     const token = req.headers.authorization;
-
+    
     await loginService.readToken(token);
     
     const allUsers = await userService.getAll();
-
+    
     res.status(200).json(allUsers);
+  },
+  
+  /** @type {import('express').RequestHandler} */
+  async getById(req, res) {
+    const token = req.headers.authorization;
+    const { id } = await userService.validateParamsId(req.params);
+    
+    await loginService.readToken(token);
+
+    const user = await userService.getById(id);
+
+    res.status(200).json(user);
   },
 };
 
