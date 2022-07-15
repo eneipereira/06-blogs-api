@@ -37,6 +37,17 @@ const userService = {
     return user;
   },
 
+  async getAll() {
+    const allUsers = await models.User.findAll({
+      raw: true,
+      attributes: {
+      exclude: ['password'],
+      },
+    });
+
+    return allUsers;
+  },
+
   async getByEmail(email, password) {
     const user = await models.User.findOne({ 
       where: { email, password },
