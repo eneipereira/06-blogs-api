@@ -14,6 +14,17 @@ const categoryController = {
     
     res.status(201).json(newCategory);
   },
+  
+  /** @type {import('express').RequestHandler} */
+  async getAll(req, res) {
+    const token = req.headers.authorization;
+    
+    await loginService.readToken(token);
+
+    const allCategories = await categoryService.getAll();
+
+    res.status(200).json(allCategories);
+  },
 };
 
 module.exports = categoryController;
