@@ -26,6 +26,20 @@ const loginService = {
 
     return token;
   },
+
+  async readToken(token) {
+    const { data } = jwt.verify(token, secret, (err, decoded) => {
+        if (!token) {
+          throw new jwt.JsonWebTokenError('Token not found');
+        }
+        if (err && (err.message.includes('invalid') || err.message.includes('malformed'))) {
+          throw new jwt.JsonWebTokenError('Expired or invalid token');
+        }
+      return decoded;
+    });
+  
+    return data;
+  },
 };
 
 module.exports = loginService;
