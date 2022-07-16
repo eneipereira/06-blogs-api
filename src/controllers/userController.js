@@ -4,7 +4,7 @@ const userService = require('../services/userService');
 const userController = {
   /** @type {import('express').RequestHandler} */
   async create(req, res) {
-    const data = await userService.validateBodyCreate(req.body);
+    const data = await userService.validateBodyUser(req.body);
     
     const newUser = await userService.create(data);
     
@@ -27,9 +27,10 @@ const userController = {
   /** @type {import('express').RequestHandler} */
   async getById(req, res) {
     const token = req.headers.authorization;
-    const { id } = await userService.validateParamsId(req.params);
     
     await loginService.readToken(token);
+
+    const { id } = await userService.validateParamsId(req.params);
 
     const user = await userService.getById(id);
 

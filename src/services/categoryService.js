@@ -4,7 +4,7 @@ const ConflictError = require('../errors/ConflictError');
 const runSchema = require('./utils');
 
 const categoryService = {
-  async validateBodyCreate(body) {
+  async validateBodyCategory(body) {
     const result = runSchema(Joi.object({
       name: Joi.string().required().min(3).max(255),
     }).messages({

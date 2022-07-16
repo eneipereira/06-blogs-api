@@ -6,9 +6,9 @@ const categoryController = {
   async create(req, res) {
     const token = req.headers.authorization;
     
-    const data = await categoryService.validateBodyCreate(req.body);
-    
     await loginService.readToken(token);
+    
+    const data = await categoryService.validateBodyCategory(req.body);
     
     const newCategory = await categoryService.create(data);
     

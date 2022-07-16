@@ -6,7 +6,7 @@ const UserNotFound = require('../errors/UserNotFoundError');
 const runSchema = require('./utils');
 
 const userService = {
-  async validateBodyCreate(body) {
+  async validateBodyUser(body) {
     const result = runSchema(Joi.object({
       displayName: Joi.string().required().min(8),
       email: Joi.string().required().email(),
