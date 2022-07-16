@@ -2,6 +2,7 @@
 
 const { DataTypes } = require('sequelize');
 
+/** @type {import('sequelize').ModelAttributes} */
 const attributes = {
   id: {
     allowNull: false,
@@ -14,18 +15,16 @@ const attributes = {
   userId: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    references: {
-      model: 'Users',
-      key: 'id'
-    }
   },
   published: {
     allowNull: false,
-    type: DataTypes.DATE
+    type: DataTypes.DATE,
+    defaultValue: new Date()
   },
   updated: {
     allowNull: false,
-    type: DataTypes.DATE
+    type: DataTypes.DATE,
+    defaultValue: new Date()
   }
 };
 
