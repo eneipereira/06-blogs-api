@@ -2,7 +2,7 @@ const Joi = require('joi');
 const models = require('../database/models');
 const ConflictError = require('../errors/ConflictError');
 const NotFoundError = require('../errors/NotFoundError');
-const UserNotFound = require('../errors/UserNotFoundError');
+const BadRequestError = require('../errors/BadRequestError');
 const runSchema = require('./utils');
 
 const userService = {
@@ -77,7 +77,7 @@ const userService = {
       raw: true,
     });
 
-    if (!user) throw new UserNotFound();
+    if (!user) throw new BadRequestError();
 
     const { password: userPass, ...newUser } = user;
 
