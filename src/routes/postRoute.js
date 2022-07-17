@@ -3,6 +3,8 @@ const postController = require('../controllers/postController');
 
 const postRoute = Router();
 
+postRoute.get('/search', postController.search);
+
 postRoute.route('/:id')
 .get(postController.getById)
 .put(postController.edit)

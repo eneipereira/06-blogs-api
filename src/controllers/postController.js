@@ -66,10 +66,22 @@ const postController = {
       loginService.readToken(token),
       postService.validateParamsId(req.params),
     ]);
-
+    
     await postService.remove(userId, id);
-
+    
     res.sendStatus(204);
+  },
+  
+  /** @type {import('express').RequestHandler} */
+  async search(req, res) {
+    const { q } = req.query;
+    const token = req.headers.authorization;
+
+    await loginService.readToken(token);
+
+    const searchResult = await postService.search(q);
+
+    res.status(200).json(searchResult);
   },
 };
 

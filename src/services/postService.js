@@ -1,5 +1,6 @@
 const Joi = require('joi');
 const Sequelize = require('sequelize');
+const { Op } = require('sequelize');
 const models = require('../database/models');
 const config = require('../database/config/config');
 const BadRequestError = require('../errors/BadRequestError');
@@ -116,6 +117,27 @@ const postService = {
     if (userId !== post.userId) throw new UnauthorizedError();
 
     await models.BlogPost.destroy({ where: { id } });
+  },
+
+  async search(query) {
+    const matchedResult = await models.BlogPost.findAll({
+      where: {
+        [Op.or]: [
+          {
+            title: { [Op.like]: `%${query}%` },
+          },
+          {
+            content: { [Op.like]: `%${query}%` },
+          },
+        ],
+      },
+      include: [
+        { model: models.User, as: 'user', attributes: { exclude: ['password'] } },
+        { model: models.Category, as: 'categories', through: { attributes: [] } },
+      ],
+    });
+
+    return matchedResult;
   },
 };
 
