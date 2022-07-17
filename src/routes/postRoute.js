@@ -4,7 +4,8 @@ const postController = require('../controllers/postController');
 const postRoute = Router();
 
 postRoute.route('/:id')
-.get(postController.getById);
+.get(postController.getById)
+.put(postController.edit);
 
 postRoute.route('/')
 .post(postController.create)

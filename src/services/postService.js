@@ -5,16 +5,29 @@ const config = require('../database/config/config');
 const BadRequestError = require('../errors/BadRequestError');
 const runSchema = require('./utils');
 const NotFoundError = require('../errors/NotFoundError');
+const UnauthorizedError = require('../errors/UnauthorizedError');
 
 /** @type {import('sequelize').Sequelize} */
 const sequelize = new Sequelize(config.development);
 
 const postService = {
-  async validateBodyPost(body) {
+  async validateBodyPostAdd(body) {
     const result = runSchema(Joi.object({
       title: Joi.string().required().max(255),
       content: Joi.string().required().max(255),
       categoryIds: Joi.array().min(1).required(),
+    }).messages({
+      'any.required': 'Some required fields are missing',
+      'string.empty': 'Some required fields are missing',
+    }))(body);
+
+    return result;
+  },
+
+  async validateBodyPostEdit(body) {
+    const result = runSchema(Joi.object({
+      title: Joi.string().required().max(255),
+      content: Joi.string().required().max(255),
     }).messages({
       'any.required': 'Some required fields are missing',
       'string.empty': 'Some required fields are missing',
@@ -85,6 +98,16 @@ const postService = {
     if (!post) throw new NotFoundError('Post does not exist');
 
     return post;
+  },
+
+  async edit(userId, id, changes) {
+    const oldPost = await postService.getById(id);
+
+    if (userId !== id) throw new UnauthorizedError();
+
+    const postChanges = { ...oldPost, ...changes, updated: new Date() };
+
+    await models.BlogPost.update(postChanges, { where: { id } });
   },
 };
 

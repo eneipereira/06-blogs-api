@@ -8,7 +8,7 @@ const postController = {
     
     const { id } = await loginService.readToken(token);
     
-    const data = await postService.validateBodyPost(req.body);
+    const data = await postService.validateBodyPostAdd(req.body);
     
     await postService.validateCategoryIds(data.categoryIds);
     
@@ -32,9 +32,26 @@ const postController = {
   async getById(req, res) {
     const token = req.headers.authorization;
 
-    const { id } = await postService.validateParamsId(req.params);
-
     await loginService.readToken(token);
+    
+    const { id } = await postService.validateParamsId(req.params);
+    
+    const post = await postService.getById(id);
+    
+    res.status(200).json(post);
+  },
+  
+  /** @type {import('express').RequestHandler} */
+  async edit(req, res) {
+    const token = req.headers.authorization;
+
+    const [{ id: userId }, { id }, changes] = await Promise.all([
+      loginService.readToken(token),
+      postService.validateParamsId(req.params),
+      postService.validateBodyPostEdit(req.body),
+    ]); 
+
+    await postService.edit(userId, id, changes);
 
     const post = await postService.getById(id);
 
