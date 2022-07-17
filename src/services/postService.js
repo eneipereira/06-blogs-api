@@ -102,12 +102,20 @@ const postService = {
 
   async edit(userId, id, changes) {
     const oldPost = await postService.getById(id);
-
+    
     if (userId !== id) throw new UnauthorizedError();
-
+    
     const postChanges = { ...oldPost, ...changes, updated: new Date() };
-
+    
     await models.BlogPost.update(postChanges, { where: { id } });
+  },
+  
+  async remove(userId, id) {
+    const post = await postService.getById(id);
+
+    if (userId !== post.userId) throw new UnauthorizedError();
+
+    await models.BlogPost.destroy({ where: { id } });
   },
 };
 

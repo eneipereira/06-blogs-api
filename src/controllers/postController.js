@@ -44,18 +44,32 @@ const postController = {
   /** @type {import('express').RequestHandler} */
   async edit(req, res) {
     const token = req.headers.authorization;
-
+    
     const [{ id: userId }, { id }, changes] = await Promise.all([
       loginService.readToken(token),
       postService.validateParamsId(req.params),
       postService.validateBodyPostEdit(req.body),
     ]); 
-
+    
     await postService.edit(userId, id, changes);
-
+    
     const post = await postService.getById(id);
-
+    
     res.status(200).json(post);
+  },
+  
+  /** @type {import('express').RequestHandler} */
+  async remove(req, res) {
+    const token = req.headers.authorization;
+    
+    const [{ id: userId }, { id }] = await Promise.all([
+      loginService.readToken(token),
+      postService.validateParamsId(req.params),
+    ]);
+
+    await postService.remove(userId, id);
+
+    res.sendStatus(204);
   },
 };
 

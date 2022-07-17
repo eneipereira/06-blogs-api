@@ -5,7 +5,8 @@ const postRoute = Router();
 
 postRoute.route('/:id')
 .get(postController.getById)
-.put(postController.edit);
+.put(postController.edit)
+.delete(postController.remove);
 
 postRoute.route('/')
 .post(postController.create)

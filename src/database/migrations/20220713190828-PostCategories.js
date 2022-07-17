@@ -15,7 +15,8 @@ module.exports = {
         references: {
           model: 'BlogPosts',
           key: 'id'
-        }
+        },
+        onDelete: 'cascade'
       },
       categoryId: {
         type: DataTypes.INTEGER,
@@ -24,7 +25,8 @@ module.exports = {
         references: {
           model: 'Categories',
           key: 'id'
-        }
+        },
+        onDelete: 'cascade'
       }
     });
   },
