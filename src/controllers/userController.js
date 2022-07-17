@@ -29,12 +29,23 @@ const userController = {
     const token = req.headers.authorization;
     
     await loginService.readToken(token);
-
+    
     const { id } = await userService.validateParamsId(req.params);
-
+    
     const user = await userService.getById(id);
-
+    
     res.status(200).json(user);
+  },
+  
+  /** @type {import('express').RequestHandler} */
+  async remove(req, res) {
+    const token = req.headers.authorization;
+    
+    const { id } = await loginService.readToken(token);
+
+    await userService.remove(id);
+
+    res.sendStatus(204);
   },
 };
 
