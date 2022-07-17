@@ -20,12 +20,25 @@ const postController = {
   /** @type {import('express').RequestHandler} */
   async getAll(req, res) {
     const token = req.headers.authorization;
+    
+    await loginService.readToken(token);
+    
+    const allPosts = await postService.getAll();
+    
+    res.status(200).json(allPosts);
+  },
+  
+  /** @type {import('express').RequestHandler} */
+  async getById(req, res) {
+    const token = req.headers.authorization;
+
+    const { id } = await postService.validateParamsId(req.params);
 
     await loginService.readToken(token);
 
-    const allPosts = await postService.getAll();
+    const post = await postService.getById(id);
 
-    res.status(200).json(allPosts);
+    res.status(200).json(post);
   },
 };
 

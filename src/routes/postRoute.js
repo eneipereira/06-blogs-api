@@ -3,6 +3,9 @@ const postController = require('../controllers/postController');
 
 const postRoute = Router();
 
+postRoute.route('/:id')
+.get(postController.getById);
+
 postRoute.route('/')
 .post(postController.create)
 .get(postController.getAll);

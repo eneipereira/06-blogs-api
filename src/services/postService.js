@@ -4,6 +4,7 @@ const models = require('../database/models');
 const config = require('../database/config/config');
 const BadRequestError = require('../errors/BadRequestError');
 const runSchema = require('./utils');
+const NotFoundError = require('../errors/NotFoundError');
 
 /** @type {import('sequelize').Sequelize} */
 const sequelize = new Sequelize(config.development);
@@ -30,6 +31,14 @@ const postService = {
     const exists = data.every((each) => each);
 
     if (!exists) throw new BadRequestError('"categoryIds" not found');
+  },
+
+  async validateParamsId(params) {
+    const result = runSchema(Joi.object({
+      id: Joi.number().required().positive().integer(),
+    }))(params);
+
+    return result;
   },
 
   async create(data) {
@@ -62,6 +71,20 @@ const postService = {
     });
 
     return allPosts;
+  },
+
+  async getById(id) {
+    const post = await models.BlogPost.findOne({
+      where: { id },
+      include: [
+        { model: models.User, as: 'user', attributes: { exclude: ['password'] } },
+        { model: models.Category, as: 'categories', through: { attributes: [] } },
+      ],
+    });
+
+    if (!post) throw new NotFoundError('Post does not exist');
+
+    return post;
   },
 };
 
